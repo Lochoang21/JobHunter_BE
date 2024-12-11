@@ -1,6 +1,7 @@
 package vn.hoidanit.jobhunter.config;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,13 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.UNAUTHORIZED.value());
-        res.setError(authException.getMessage());
+
+        //check điều kiện khác null
+        String errorMessage = Optional.ofNullable(authException.getCause())
+        .map(Throwable::getMessage) // điều kiện khác null
+        .orElse(authException.getMessage()); // điều kiện bằng null
+        res.setError(errorMessage);
+
         res.setMessage("Token khong hop le (het han, khong dung hoac khong truyen JWT o header)");
 
         mapper.writeValue(response.getWriter(), res);
