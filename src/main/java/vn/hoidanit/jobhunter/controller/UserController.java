@@ -4,7 +4,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
 
+import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.User;
+import vn.hoidanit.jobhunter.domain.dto.ResCreateUserDTO;
+import vn.hoidanit.jobhunter.domain.dto.ResUpdateUserDTO;
+import vn.hoidanit.jobhunter.domain.dto.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
@@ -17,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,37 +56,53 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
+    @ApiMessage("fetch user by id")
+    public ResponseEntity<ResUserDTO> getUserById(@PathVariable("id") long id) throws IdInvalidException {
         User fetchUser = this.userService.handleGetUserById(id);
+        if (fetchUser == null) {
+            throw new IdInvalidException("User với Id: " + id + " không tồn tại!");
+        }
         // return ResponseEntity.status(HttpStatus.OK).body(fetchUser);
 
-        return ResponseEntity.ok(fetchUser);
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.convertToResUserDTO(fetchUser));
     }
 
     // @GetMapping("/users/create")
     @PostMapping("/users")
-    public ResponseEntity<User> createNewUser(@RequestBody User postmanUser) {
+    @ApiMessage("create a new user")
+    public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User postmanUser) throws IdInvalidException {
+        boolean isEmailExits = this.userService.isEmailExits(postmanUser.getEmail());
+        if (isEmailExits) {
+           throw new IdInvalidException("Email "+ postmanUser.getEmail()+" đã tồn tại!") ;
+        }
         String hashPassword = this.passwordEncoder.encode(postmanUser.getPassword());
         postmanUser.setPassword(hashPassword);
         User newUser = this.userService.handleCreateUser(postmanUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(newUser));
         // return ResponseEntity.ok(newUser);
     }
 
     @PutMapping("/users")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
+    @ApiMessage("update a user")
+    public ResponseEntity<ResUpdateUserDTO> updateUser(@RequestBody User user) throws IdInvalidException {
         User userUpdate = this.userService.handleUpdateUser(user);
+
+        if (userUpdate == null) {
+            throw new IdInvalidException("user với Id: "+user.getId()+" không tồn tại");
+        }
         // return ResponseEntity.status(HttpStatus.OK).body(userUpdate);
-        return ResponseEntity.ok(userUpdate);
+        return ResponseEntity.ok(this.userService.convertToResUpdateUserDTO(userUpdate));
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
-        if (id >= 1500) {
-            throw new IdInvalidException("Id qua lon");
+    @ApiMessage("delete a user")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
+        User currentUser = this.userService.handleGetUserById(id);
+        if(currentUser == null) {
+            throw new IdInvalidException("User với Id: " + id + "không tồn tại!" );
         }
         this.userService.handleDeleteUser(id);
         // return ResponseEntity.status(HttpStatus.OK).body("UserIsDeleted");
-        return ResponseEntity.ok("UserDeleted");
+        return ResponseEntity.ok(null);
     }
 }
