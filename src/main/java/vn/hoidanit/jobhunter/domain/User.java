@@ -9,6 +9,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -19,12 +21,12 @@ import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.constant.GenderEnum;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Getter
 @Setter
 public class User {
 
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
@@ -42,26 +44,32 @@ public class User {
 
     private String address;
 
-     @Column(columnDefinition = "MEDIUMTEXT")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
-    
+
     private Instant createAt;
     private Instant updateAt;
     private String createBy;
     private String updateBy;
 
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     @PrePersist
-    public void handleBeforeCreate(){
-        this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true ? 
-        SecurityUtil.getCurrentUserLogin().get() : "";
+    public void handleBeforeCreate() {
+        this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
         this.createAt = Instant.now();
 
     }
 
     @PreUpdate
-    public void handleBeforeUpdate(){
-        this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() == true ? 
-        SecurityUtil.getCurrentUserLogin().get() : "";
+    public void handleBeforeUpdate() {
+        this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
         this.updateAt = Instant.now();
 
     }
