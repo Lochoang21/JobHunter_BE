@@ -3,6 +3,8 @@ package vn.hoidanit.jobhunter.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.turkraft.springfilter.boot.Filter;
+
 import io.micrometer.core.instrument.Meter.Id;
 import vn.hoidanit.jobhunter.service.SkillService;
 
@@ -64,7 +66,7 @@ public class SkillController {
 
     @GetMapping("/skills")
     @ApiMessage("Fetch all skills")
-    public ResponseEntity<ResultPaginationDTO> getAllSkill(Specification<Skill> spec, Pageable pageable) {
+    public ResponseEntity<ResultPaginationDTO> getAllSkill(@Filter Specification<Skill> spec, Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(this.skillService.handleGetAllSkill(spec, pageable));
     }
 
