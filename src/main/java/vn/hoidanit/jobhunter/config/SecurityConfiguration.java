@@ -43,7 +43,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
-        String[] permitAll = { "/", "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**",
+        String[] permitAll = { "/", "/api/v1/auth/login","/api/v1/auth/register", "/api/v1/auth/refresh", "/storage/**",
                 "/api/v1./companies/**", "/api/v1/jobs/**" };
         http
                 .csrf(c -> c.disable())

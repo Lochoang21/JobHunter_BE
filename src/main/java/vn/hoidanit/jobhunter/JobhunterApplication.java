@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 // })
 
 @SpringBootApplication
-public class JobhunterApplication {
+public class JobhunterApplication {	
 
 	public static void main(String[] args) {
 		SpringApplication.run(JobhunterApplication.class, args);

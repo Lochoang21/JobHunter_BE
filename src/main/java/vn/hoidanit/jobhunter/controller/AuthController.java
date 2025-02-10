@@ -9,17 +9,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.request.RequestLoginDTO;
+import vn.hoidanit.jobhunter.domain.request.RequestRegisterDTO;
 import vn.hoidanit.jobhunter.domain.response.RestLoginDTO;
 import vn.hoidanit.jobhunter.domain.response.RestLoginDTO.UserLogin;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
+import vn.hoidanit.jobhunter.util.constant.GenderEnum;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,15 +39,17 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${hoidanit.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
     public AuthController(AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil,
-            UserService userService) {
+            UserService userService, PasswordEncoder passwordEncoder) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/auth/login")
@@ -175,6 +180,27 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, deleteSpringCookie.toString())
                 .body(null);
+    }
+
+    @PostMapping("auth/register")
+    @ApiMessage("Register User")
+    public ResponseEntity<?> register(@Valid @RequestBody RequestRegisterDTO registerDTO) {
+        if (userService.isEmailExits(registerDTO.getEmail())) {
+            throw new RuntimeException("Email đã tồn tại!");
+        }
+
+        String encodedPassword = this.passwordEncoder.encode(registerDTO.getPassword());
+
+        userService.register(
+                registerDTO.getEmail(),
+                registerDTO.getName(),
+                registerDTO.getAge(),
+                registerDTO.getGender(),
+                registerDTO.getAddress(),
+                encodedPassword
+        );
+
+        return ResponseEntity.ok("Đăng ký thành công! Vui lòng đăng nhập.");
     }
 
 }

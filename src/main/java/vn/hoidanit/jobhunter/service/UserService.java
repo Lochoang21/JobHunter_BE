@@ -10,8 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.mysql.cj.jdbc.interceptors.ResultSetScannerInterceptor;
-
 import vn.hoidanit.jobhunter.domain.Company;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO;
@@ -20,6 +18,7 @@ import vn.hoidanit.jobhunter.domain.response.ResUserDTO;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hoidanit.jobhunter.domain.response.ResultPaginationDTO.Meta;
 import vn.hoidanit.jobhunter.repository.UserRepository;
+import vn.hoidanit.jobhunter.util.constant.GenderEnum;
 
 @Service
 public class UserService {
@@ -177,5 +176,16 @@ public class UserService {
 
     public User getUserByRefreshTokenAndEmail(String token, String email){
         return this.userRepository.findByRefreshTokenAndEmail(token, email);
+    }
+
+    public  User register (String email, String name, Integer age, GenderEnum gender, String address, String password) {
+        User user = new User();
+        user.setEmail(email);
+        user.setName(name);
+        user.setAge(age);
+        user.setGender(gender);
+        user.setAddress(address);
+        user.setPassword(password);
+        return userRepository.save(user);
     }
 }
