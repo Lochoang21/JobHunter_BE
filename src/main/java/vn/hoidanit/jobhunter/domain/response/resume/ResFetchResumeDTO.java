@@ -19,6 +19,8 @@ public class ResFetchResumeDTO {
     @Enumerated(EnumType.STRING)
     private ResumeStatusEnum status;
 
+    private String companyName;
+
     private Instant createAt;
     private Instant updateAt;
 
