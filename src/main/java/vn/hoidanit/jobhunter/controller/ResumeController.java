@@ -95,4 +95,13 @@ public class ResumeController {
         this.resumeService.deleteResume(id);
         return ResponseEntity.ok().body(null);
     }
+
+    @PostMapping("/resumes/by-user")
+    @ApiMessage("Get list resume by user")
+    public ResponseEntity<ResultPaginationDTO> fetchResumeByUser(Pageable pageable) {
+        //TODO: process POST request
+        
+        return ResponseEntity.ok().body(this.resumeService.fetchResumeByUser(pageable));
+    }
+    
 }

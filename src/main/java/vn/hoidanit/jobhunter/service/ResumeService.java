@@ -1,13 +1,23 @@
 package vn.hoidanit.jobhunter.service;
 
+import java.security.Security;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import vn.hoidanit.jobhunter.util.SecurityUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import com.turkraft.springfilter.builder.FilterBuilder;
+import com.turkraft.springfilter.converter.FilterSpecification;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import com.turkraft.springfilter.parser.FilterParser;
+import com.turkraft.springfilter.parser.node.FilterNode;
 
 import vn.hoidanit.jobhunter.domain.Job;
 import vn.hoidanit.jobhunter.domain.Resume;
@@ -22,6 +32,16 @@ import vn.hoidanit.jobhunter.repository.UserRepository;
 
 @Service
 public class ResumeService {
+
+    @Autowired
+    FilterBuilder fb;
+
+    @Autowired 
+    private FilterParser filterParser;
+
+    @Autowired
+    private FilterSpecificationConverter filterSpecificationConverter;
+
     private final ResumeRepository resumeRepository;
     private final UserRepository userRepository;
     private final JobRepository jobRepository;
@@ -111,5 +131,30 @@ public class ResumeService {
 
     public void deleteResume(long id) {
         this.resumeRepository.deleteById(id);
+    }
+
+    public ResultPaginationDTO fetchResumeByUser(Pageable pageable){
+
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                        ? SecurityUtil.getCurrentUserLogin().get() : "";
+
+        FilterNode node = filterParser.parse("email='" + email + "'");
+        FilterSpecification<Resume> spec = filterSpecificationConverter.convert(node);
+        Page<Resume> pageResume = this.resumeRepository.findAll(spec, pageable);
+
+        ResultPaginationDTO rs = new ResultPaginationDTO();
+        ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
+
+        mt.setPage(pageable.getPageNumber() + 1);
+        mt.setPageSize(pageable.getPageSize());
+
+        mt.setPages(pageResume.getTotalPages());
+        mt.setTotal(pageResume.getTotalElements());
+
+        rs.setMeta(mt);
+
+        
+            return rs;
+
     }
 }

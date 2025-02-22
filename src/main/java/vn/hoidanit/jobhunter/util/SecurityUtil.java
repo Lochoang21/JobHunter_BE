@@ -45,7 +45,12 @@ public class SecurityUtil {
     @Value("${hoidanit.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenExpiration;
 
-    public String createAccessToken(String email, RestLoginDTO.UserLogin dto) {
+    public String createAccessToken(String email, RestLoginDTO dto) {
+
+        RestLoginDTO.UserInsideToken userToken = new RestLoginDTO.UserInsideToken();
+        userToken.setId(dto.getUser().getId());
+        userToken.setEmail(dto.getUser().getEmail());
+        userToken.setName(dto.getUser().getName());
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
@@ -59,7 +64,7 @@ public class SecurityUtil {
         .issuedAt(now)
         .expiresAt(validity)
         .subject(email)
-        .claim("user", dto)
+        .claim("user", userToken)
         .claim("permission", listAuthority)
         .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
@@ -71,12 +76,17 @@ public class SecurityUtil {
         Instant now = Instant.now();
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
 
+        RestLoginDTO.UserInsideToken userToken = new RestLoginDTO.UserInsideToken();
+        userToken.setId(dto.getUser().getId());
+        userToken.setEmail(dto.getUser().getEmail());
+        userToken.setName(dto.getUser().getName());
+
         // @formatter:off
         JwtClaimsSet claims = JwtClaimsSet.builder()
         .issuedAt(now)
         .expiresAt(validity)
         .subject(email)
-        .claim("baoloc",dto.getUser())
+        .claim("user",userToken)
         .build();
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader,

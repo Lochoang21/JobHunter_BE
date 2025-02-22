@@ -73,4 +73,15 @@ public class PermissionService {
         }
         return null;
     }
+
+    public boolean isSameName(Permission p)
+    {
+        Permission permission = this.fecthById(p.getId());
+        if (permission != null) {
+            if (permission.getName().equals(p.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

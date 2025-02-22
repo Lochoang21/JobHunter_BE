@@ -3,6 +3,8 @@ package vn.hoidanit.jobhunter.controller;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +19,7 @@ import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.request.RequestLoginDTO;
 import vn.hoidanit.jobhunter.domain.request.RequestRegisterDTO;
+import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO;
 import vn.hoidanit.jobhunter.domain.response.RestLoginDTO;
 import vn.hoidanit.jobhunter.domain.response.RestLoginDTO.UserLogin;
 import vn.hoidanit.jobhunter.service.UserService;
@@ -68,11 +71,12 @@ public class AuthController {
             RestLoginDTO.UserLogin userLogin = new RestLoginDTO.UserLogin(
                     currentUserDB.getId(),
                     currentUserDB.getEmail(),
-                    currentUserDB.getName());
+                    currentUserDB.getName(),
+                    currentUserDB.getRole());
             res.setUser(userLogin);
         }
         // create accessToken
-        String access_token = this.securityUtil.createAccessToken(authentication.getName(), res.getUser());
+        String access_token = this.securityUtil.createAccessToken(authentication.getName(), res);
         res.setAccessToken(access_token);
 
         // create refreshToken
@@ -105,6 +109,7 @@ public class AuthController {
             userLogin.setId(currentUserDB.getId());
             userLogin.setEmail(currentUserDB.getEmail());
             userLogin.setName(currentUserDB.getName());
+            userLogin.setRole(currentUserDB.getRole());
             userGetAccount.setUser(userLogin);
         }
         return ResponseEntity.ok().body(userGetAccount);
@@ -136,12 +141,13 @@ public class AuthController {
             RestLoginDTO.UserLogin userLogin = new RestLoginDTO.UserLogin(
                     currentUserDB.getId(),
                     currentUserDB.getEmail(),
-                    currentUserDB.getName());
+                    currentUserDB.getName(),
+                    currentUser.getRole());
             res.setUser(userLogin);
         }
         // create accessToken
-        String access_token = this.securityUtil.createAccessToken(email, res.getUser());
-        res.setAccessToken(access_token);
+        String access_token = this.securityUtil.createAccessToken(email, res);
+        res.setAccessToken(access_token);   
 
         // create refreshToken
         String new_refresh_token = this.securityUtil.createRefreshToken(email, res);
@@ -184,23 +190,17 @@ public class AuthController {
 
     @PostMapping("auth/register")
     @ApiMessage("Register User")
-    public ResponseEntity<?> register(@Valid @RequestBody RequestRegisterDTO registerDTO) {
-        if (userService.isEmailExits(registerDTO.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại!");
+    public ResponseEntity<ResCreateUserDTO> register(@Valid @RequestBody User user) throws IdInvalidException {
+        boolean isEmailExits = this.userService.isEmailExits(user.getEmail());
+        if (isEmailExits) {
+            throw new IdInvalidException("Email " + user.getEmail() + "đã tồn tại. Vui lòng sử dụng email khác");
         }
 
-        String encodedPassword = this.passwordEncoder.encode(registerDTO.getPassword());
+        String encodedPassword = this.passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        User registerUser =  this.userService.handleCreateUser(user);
 
-        userService.register(
-                registerDTO.getEmail(),
-                registerDTO.getName(),
-                registerDTO.getAge(),
-                registerDTO.getGender(),
-                registerDTO.getAddress(),
-                encodedPassword
-        );
-
-        return ResponseEntity.ok("Đăng ký thành công! Vui lòng đăng nhập.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(registerUser));
     }
 
 }
