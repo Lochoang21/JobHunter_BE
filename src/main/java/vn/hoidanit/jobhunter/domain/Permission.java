@@ -15,6 +15,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 
@@ -22,6 +23,7 @@ import vn.hoidanit.jobhunter.util.SecurityUtil;
 @Table(name = "permissions")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +45,13 @@ public class Permission {
     private Instant updateAt;
     private String createBy;
     private String updateBy;
+
+    public Permission(String name, String apiPath, String method, String module){
+        this.name = name;
+        this.apiPath = apiPath;
+        this.method = method;
+        this.module = module;
+    }
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "permissions")
     @JsonIgnore
