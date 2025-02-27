@@ -45,7 +45,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http,
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         String[] permitAll = { "/", "/api/v1/auth/login","/api/v1/auth/register", "/api/v1/auth/refresh", "/storage/**",
-                "/api/v1./companies/**", "/api/v1/jobs/**" };
+                "/api/v1./companies/**", "/api/v1/jobs/**","/api/v1/skills/**","/api/v1/files" };
         http
                 .csrf(c -> c.disable())
                 .cors(Customizer.withDefaults())
