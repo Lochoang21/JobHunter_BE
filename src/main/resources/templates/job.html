@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Notification</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f4f4f4; padding: 20px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="background-color: #ffffff; padding: 20px; border-radius: 5px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+                    <tr>
+                        <td align="center" style="padding: 10px 0;">
+                            <h2 style="color: #333;">Thông Báo Công Việc Mới</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="padding: 10px 0; font-size: 16px; color: #666;">
+                            <p>Xin chào,</p>
+                            <p>Bạn có một công việc mới phù hợp với hồ sơ của bạn. Vui lòng kiểm tra chi tiết dưới đây:</p>
+                        </td>
+                    </tr>
+                    <tr th:each="job : ${jobs}">
+                        <td style="padding: 10px 0;">
+                            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                                <p><strong>Tên Công Việc:</strong> <span th:text="${job.name}"></span></p>
+                                <p><strong>Nội Dung:</strong> <span th:text="${job.description}"></span></p>
+                                <p><strong>Chức Vụ:</strong> <span th:text="${job.level}"></span></p>
+                                <p><strong>Mức Lương:</strong> <span th:text="${#numbers.formatDecimal(job.salary, 0, 'COMMA', 0, 'POINT')}"></span></p>
+                                <p><strong>Kỹ Năng Yêu Cầu:</strong> 
+                                    <span th:each="skill : ${job.skills}" th:text="${skill.name} + ', '"></span>
+                                </p>
+                                <p><a  style="display: inline-block; padding: 5px 10px; background-color: #28a745; color: white; text-decoration: none; border-radius: 3px;">Xem Chi Tiết</a></p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="font-size: 14px; color: #888; padding-top: 20px;">
+                            <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.hoidanit.jobhunter.service.EmailService;
+import vn.hoidanit.jobhunter.service.SubscriberService;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +16,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class EmailController {
 
     private final EmailService emailService;
+    private final SubscriberService subscriberService;
 
-    public EmailController(EmailService emailService){
+    public EmailController(EmailService emailService, SubscriberService subscriberService){
         this.emailService = emailService;
+        this.subscriberService= subscriberService;
     }
 
     @GetMapping("/email")
     @ApiMessage("Send simple Email")
     public String getMethodName() {
-        this.emailService.sendSimpleEmail();
+        this.subscriberService.sendSubscribersEmailJobs();
         return "send oke";
     }
     
