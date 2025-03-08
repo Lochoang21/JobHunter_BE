@@ -18,6 +18,17 @@ import vn.hoidanit.jobhunter.domain.response.RestResponse;
 
 @RestControllerAdvice
 public class GlobalException {
+
+    //handel all exception
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<RestResponse<Object>> handleAllException(Exception ex) {
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        res.setMessage(ex.getMessage());
+        res.setError("Internal Server Error");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+    }
+    
     @ExceptionHandler(value = {
             UsernameNotFoundException.class,
             BadCredentialsException.class,
@@ -26,8 +37,8 @@ public class GlobalException {
     public ResponseEntity<RestResponse<Object>> handleIdException(Exception exception) {
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError(exception.getMessage());
-        res.setMessage("Thong tin dang nhap khong hop le...");
+        res.setMessage(exception.getMessage());
+        res.setError("Exception occurs...");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
@@ -37,8 +48,8 @@ public class GlobalException {
     public ResponseEntity<RestResponse<Object>> handleFoundException(Exception exception) {
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.NOT_FOUND.value());
-        res.setError(exception.getMessage());
-        res.setMessage("404 Not Found. URL may not exist...");
+        res.setMessage(exception.getMessage());
+        res.setError("404 Not Found. URL may not exist...");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
@@ -58,24 +69,26 @@ public class GlobalException {
     }
 
     @ExceptionHandler(value = {
-        UploadFileException.class,
+            UploadFileException.class,
     })
     public ResponseEntity<RestResponse<Object>> handleUploadFileException(Exception exception) {
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError(exception.getMessage());
-        res.setMessage("Exception Upload File...");
+        res.setMessage(exception.getMessage());
+        res.setError("Exception Upload File...");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
     @ExceptionHandler(value = {
-        PermissionException.class,
+            PermissionException.class,
     })
     public ResponseEntity<RestResponse<Object>> handlePermissionException(Exception exception) {
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.FORBIDDEN.value());
-        res.setError(exception.getMessage());
-        res.setMessage("Forbidden...");
+        res.setMessage(exception.getMessage());
+        res.setError("Forbidden...");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(res);
     }
+
+  
 }

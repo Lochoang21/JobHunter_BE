@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.jobhunter.domain.Skill;
@@ -33,6 +34,15 @@ public class SubscriberService {
     public boolean isExistEmail(String email) {
         return this.subscriberRepository.existsByEmail(email);
     }
+
+    public Subscriber findByEmail(String email) {
+        return this.subscriberRepository.findByEmail(email);
+    }
+
+    // @Scheduled(cron =  "*/10 * * * * *")
+    // public void testCron(){
+    //     System.out.println(">>> test cron");
+    // }
 
     public Subscriber findById(long id) {
         Optional<Subscriber> suOptional = this.subscriberRepository.findById(id);
