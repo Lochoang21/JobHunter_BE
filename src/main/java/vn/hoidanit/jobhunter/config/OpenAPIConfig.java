@@ -38,7 +38,7 @@ public class OpenAPIConfig {
         return new Contact()
                 .name("HOANG BAO LOC")
                 .email("ads.lochoang2101@gmail.com")
-                .url("https://hoidanit.vn");
+                .url("https://hoangbaoloc.vn");
 
     }
     private License createLicense() {
