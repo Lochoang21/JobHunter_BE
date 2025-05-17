@@ -86,6 +86,7 @@ public class UserService {
         User currentUser = this.handleGetUserById(user.getId());
         if (currentUser != null) {
             currentUser.setName(user.getName());
+            currentUser.setEmail(user.getEmail());
             currentUser.setAddress(user.getAddress());
             currentUser.setAge(user.getAge());
             currentUser.setGender(user.getGender());
