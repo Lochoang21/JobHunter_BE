@@ -46,20 +46,26 @@ public class CompanyController {
     }
 
     @GetMapping("/companies/{id}")  
-    public ResponseEntity<Company> getCompanyById(@PathVariable("id") long id) {
+    public ResponseEntity<Company> getCompanyById(@PathVariable("id") long id) throws IdInvalidException {
         Company fetchCompany = this.companyService.handleGetCompanyById(id);
+        if (fetchCompany == null) {
+            throw new IdInvalidException("Company với Id: " + id + " không tồn tại!");
+        }
         return ResponseEntity.ok(fetchCompany);
     }
 
     @PostMapping("/companies")
-    public ResponseEntity<Company> createNewCompany(@Valid @RequestBody Company postmanCompany) {
+    public ResponseEntity<Company> createNewCompany(@Valid @RequestBody Company postmanCompany) throws IdInvalidException {
         Company newCompany = this.companyService.handleCreateCompany(postmanCompany);
         return ResponseEntity.status(HttpStatus.CREATED).body(newCompany);
     }
 
     @PutMapping("/companies")
-    public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company company) {
+    public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company company) throws IdInvalidException {
         Company companyUpdate = this.companyService.handleUpdatecompany(company);
+        if (companyUpdate == null) {
+            throw new IdInvalidException("Company với id: " + company.getId() + " không tồn tại!");
+        }
         return ResponseEntity.ok(companyUpdate);
     }
 
