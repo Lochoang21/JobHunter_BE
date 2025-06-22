@@ -139,5 +139,12 @@ public class ResumeController {
         
         return ResponseEntity.ok().body(this.resumeService.fetchResumeByUser(pageable));
     }
+
+    @GetMapping("/resumes/all")
+@ApiMessage("Fetch all resumes (Admin only)")
+public ResponseEntity<ResultPaginationDTO> fetchAllResumesAdmin(@Filter Specification<Resume> spec, Pageable pageable) {
+    // Bỏ qua filter theo company, trả về tất cả
+    return ResponseEntity.ok().body(this.resumeService.fetchAllResume(spec, pageable));
+}
     
 }

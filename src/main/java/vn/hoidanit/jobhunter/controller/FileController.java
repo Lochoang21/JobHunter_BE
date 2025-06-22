@@ -51,7 +51,7 @@ public class FileController {
 
         String fileName = file.getOriginalFilename();
         List<String> allowedExtensions = Arrays.asList("pdf", "jpg", "jpeg", "png", "doc", "docx");
-        boolean isAllowedExtension = allowedExtensions.stream().anyMatch(item -> fileName.toLowerCase().endsWith(fileName));
+        boolean isAllowedExtension = allowedExtensions.stream().anyMatch(item -> fileName.toLowerCase().endsWith("." + item));
        if (!isAllowedExtension) {
             throw new UploadFileException("File extension is not allowed. Please upload a file with extension: " + allowedExtensions.toString());
        }
