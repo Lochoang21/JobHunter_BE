@@ -69,21 +69,23 @@ public class RoleService {
     }
 
     public Role updateRole(Role role) {
-        Role roleDB = this.fetchById(role.getId());
-        //check permission exist
-        if (role.getPermissions() != null) {
-            List<Long> reqPermissions = role.getPermissions().stream().map(permission -> permission.getId()).collect(Collectors.toList());
-        
-            List<Permission> dbPermissions = this.permissionRepository.findByIdIn(reqPermissions);
-            role.setPermissions(dbPermissions);
-        }
-        roleDB.setName(role.getName());
-        roleDB.setDescription(role.getDescription());
-        roleDB.setActive(role.isActive());
-        roleDB.setPermissions(role.getPermissions());
-
-        return roleDB;
+    Role roleDB = this.fetchById(role.getId());
+    
+    //check permission exist
+    if (role.getPermissions() != null) {
+        List<Long> reqPermissions = role.getPermissions().stream().map(permission -> permission.getId()).collect(Collectors.toList());
+    
+        List<Permission> dbPermissions = this.permissionRepository.findByIdIn(reqPermissions);
+        roleDB.setPermissions(dbPermissions); // ✅ Sử dụng roleDB thay vì role
     }
+    
+    roleDB.setName(role.getName());
+    roleDB.setDescription(role.getDescription());
+    roleDB.setActive(role.isActive());
+    
+    // ✅ Lưu vào database
+    return roleRepository.save(roleDB); // hoặc roleRepository.update(roleDB);
+}
 
     public void deleteRole(long id) {
         this.roleRepository.deleteById(id);
