@@ -68,11 +68,11 @@ public class AuthController {
         RestLoginDTO res = new RestLoginDTO();
         User currentUserDB = this.userService.handleGetUserByUsername(loginDTO.getUsername());
         if (currentUserDB != null) {
-            RestLoginDTO.UserLogin userLogin = new RestLoginDTO.UserLogin(
-                    currentUserDB.getId(),
-                    currentUserDB.getEmail(),
-                    currentUserDB.getName(),
-                    currentUserDB.getRole());
+            RestLoginDTO.UserLogin userLogin = new RestLoginDTO.UserLogin();
+            userLogin.setId(currentUserDB.getId());
+            userLogin.setEmail(currentUserDB.getEmail());
+            userLogin.setName(currentUserDB.getName());
+            userLogin.setRole(currentUserDB.getRole());
             res.setUser(userLogin);
         }
         // create accessToken
@@ -97,23 +97,29 @@ public class AuthController {
     }
 
     @GetMapping("/auth/account")
-    @ApiMessage("fetch account message")
-    public ResponseEntity<RestLoginDTO.UserGetAccount> getAccount() {
+@ApiMessage("fetch account message")
+public ResponseEntity<RestLoginDTO.UserGetAccount> getAccount() {
 
-        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
-        User currentUserDB = this.userService.handleGetUserByUsername(email);
+    String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
+    User currentUserDB = this.userService.handleGetUserByUsername(email);
 
-        RestLoginDTO.UserLogin userLogin = new RestLoginDTO.UserLogin();
-        RestLoginDTO.UserGetAccount userGetAccount = new RestLoginDTO.UserGetAccount();
-        if (currentUserDB != null) {
-            userLogin.setId(currentUserDB.getId());
-            userLogin.setEmail(currentUserDB.getEmail());
-            userLogin.setName(currentUserDB.getName());
-            userLogin.setRole(currentUserDB.getRole());
-            userGetAccount.setUser(userLogin);
-        }
-        return ResponseEntity.ok().body(userGetAccount);
+    RestLoginDTO.UserLogin userLogin = new RestLoginDTO.UserLogin();
+    RestLoginDTO.UserGetAccount userGetAccount = new RestLoginDTO.UserGetAccount();
+    if (currentUserDB != null) {
+        userLogin.setId(currentUserDB.getId());
+        userLogin.setEmail(currentUserDB.getEmail());
+        userLogin.setName(currentUserDB.getName());
+        userLogin.setAge(currentUserDB.getAge());
+        userLogin.setGender(currentUserDB.getGender());
+        userLogin.setAddress(currentUserDB.getAddress());
+        userLogin.setCompany(currentUserDB.getCompany());
+        userLogin.setRole(currentUserDB.getRole());
+        userLogin.setCreateAt(currentUserDB.getCreateAt());
+        userLogin.setUpdateAt(currentUserDB.getUpdateAt());
+        userGetAccount.setUser(userLogin);
     }
+    return ResponseEntity.ok().body(userGetAccount);
+}
 
     @GetMapping("/auth/refresh")
     @ApiMessage("Get user by refresh token")
@@ -138,11 +144,11 @@ public class AuthController {
         RestLoginDTO res = new RestLoginDTO();
         User currentUserDB = this.userService.handleGetUserByUsername(email);
         if (currentUserDB != null) {
-            RestLoginDTO.UserLogin userLogin = new RestLoginDTO.UserLogin(
-                    currentUserDB.getId(),
-                    currentUserDB.getEmail(),
-                    currentUserDB.getName(),
-                    currentUser.getRole());
+            RestLoginDTO.UserLogin userLogin = new RestLoginDTO.UserLogin();
+            userLogin.setId(currentUserDB.getId());
+            userLogin.setEmail(currentUserDB.getEmail());
+            userLogin.setName(currentUserDB.getName());
+            userLogin.setRole(currentUser.getRole());
             res.setUser(userLogin);
         }
         // create accessToken
