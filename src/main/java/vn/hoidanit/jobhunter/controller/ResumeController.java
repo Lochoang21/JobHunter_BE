@@ -21,6 +21,8 @@ import com.turkraft.springfilter.builder.FilterBuilder;
 import com.turkraft.springfilter.converter.FilterSpecification;
 import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -49,7 +51,7 @@ public class ResumeController {
     @Autowired
     FilterBuilder filterBuilder;
 
-        @Autowired
+    @Autowired
     private FilterSpecificationConverter filterSpecificationConverter;
 
     public ResumeController(ResumeService resumeService, UserService userService) {
@@ -87,26 +89,36 @@ public class ResumeController {
 
     @GetMapping("/resumes")
     @ApiMessage("Fetch all resumes with Pagination")
-    public ResponseEntity<ResultPaginationDTO> fetchAllResumes(@Filter Specification<Resume> spec, Pageable pageable) {
-        List<Long> arrJobIds = null;
-        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true ?
-        SecurityUtil.getCurrentUserLogin().get() : "";
+    public ResponseEntity<ResultPaginationDTO> fetchAllResumes(
+            @Filter Specification<Resume> spec,
+            Pageable pageable) {
 
-        User currrentUser = this.userService.handleGetUserByUsername(email);
-        if (currrentUser != null) {
-            Company userCompany = currrentUser.getCompany();
+         String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
 
-            if (userCompany != null) {
-                List<Job> companyJobs = userCompany.getJobs();
-                if (companyJobs != null && companyJobs.size() > 0) {
-                    arrJobIds = companyJobs.stream().map(x -> x.getId()).collect(Collectors.toList());
-                }
-            }
-        }
-        Specification<Resume> jobsInSpec = filterSpecificationConverter.convert(filterBuilder.field("job").in(filterBuilder.input(arrJobIds)).get());
-       
-       Specification<Resume> finalSpec = jobsInSpec.and(spec);
-        return ResponseEntity.ok().body(this.resumeService.fetchAllResume(finalSpec, pageable));
+        User currentUser = this.userService.handleGetUserByUsername(email);
+
+        // Get job IDs for current user's company
+        List<Long> jobIds = Optional.ofNullable(currentUser)
+                .map(User::getCompany)
+                .map(Company::getJobs)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(Job::getId)
+                .collect(Collectors.toList());
+
+        // if (jobIds.isEmpty()) {
+        //     return ResponseEntity.ok(createEmptyResult(pageable));
+        // }
+
+        // Create job filter specification
+        Specification<Resume> jobFilterSpec = (root, query, cb) -> root.get("job").get("id").in(jobIds);
+
+        // Combine with input spec
+        Specification<Resume> finalSpec = spec != null ? jobFilterSpec.and(spec) : jobFilterSpec;
+
+        return ResponseEntity.ok(this.resumeService.fetchAllResume(finalSpec, pageable));
     }
 
     @GetMapping("/resumes/{id}")
@@ -117,7 +129,7 @@ public class ResumeController {
             throw new IdInvalidException("Resume voi id: " + id + " khong ton tai!");
         }
 
-        return ResponseEntity.ok().body(this.resumeService.getResumeById(currentResume.get()) );
+        return ResponseEntity.ok().body(this.resumeService.getResumeById(currentResume.get()));
     }
 
     @DeleteMapping("/resumes/{id}")
@@ -132,19 +144,19 @@ public class ResumeController {
         return ResponseEntity.ok().body(null);
     }
 
-    @PostMapping("/resumes/by-user")
+    @GetMapping("/resumes/by-user")
     @ApiMessage("Get list resume by user")
     public ResponseEntity<ResultPaginationDTO> fetchResumeByUser(Pageable pageable) {
-        //TODO: process POST request
-        
         return ResponseEntity.ok().body(this.resumeService.fetchResumeByUser(pageable));
     }
 
     @GetMapping("/resumes/all")
-@ApiMessage("Fetch all resumes (Admin only)")
-public ResponseEntity<ResultPaginationDTO> fetchAllResumesAdmin(@Filter Specification<Resume> spec, Pageable pageable) {
-    // Bỏ qua filter theo company, trả về tất cả
-    return ResponseEntity.ok().body(this.resumeService.fetchAllResume(spec, pageable));
-}
-    
+    @ApiMessage("Fetch all resumes (Admin only)")
+    public ResponseEntity<ResultPaginationDTO> fetchAllResumesAdmin(@Filter Specification<Resume> spec,
+            Pageable pageable) {
+        // Bỏ qua filter theo company, trả về tất cả
+
+        return ResponseEntity.ok().body(this.resumeService.fetchAllResume(spec, pageable));
+    }
+
 }

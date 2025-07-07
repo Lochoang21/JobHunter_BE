@@ -36,7 +36,7 @@ public class ResumeService {
     @Autowired
     FilterBuilder fb;
 
-    @Autowired 
+    @Autowired
     private FilterParser filterParser;
 
     @Autowired
@@ -94,10 +94,11 @@ public class ResumeService {
         resFetchResumeDTO.setUpdateBy(resume.getUpdateBy());
         resFetchResumeDTO.setUpdateAt(resume.getUpdateAt());
 
-        if(resume.getJob() != null) {
+        if (resume.getJob() != null) {
             resFetchResumeDTO.setCompanyName(resume.getJob().getCompany().getName());
         }
-        resFetchResumeDTO.setUser(new ResFetchResumeDTO.UserResume(resume.getUser().getId(), resume.getUser().getName()));
+        resFetchResumeDTO
+                .setUser(new ResFetchResumeDTO.UserResume(resume.getUser().getId(), resume.getUser().getName()));
         resFetchResumeDTO.setJob(new ResFetchResumeDTO.JobResume(resume.getJob().getId(), resume.getJob().getName()));
         return resFetchResumeDTO;
     }
@@ -133,10 +134,10 @@ public class ResumeService {
         this.resumeRepository.deleteById(id);
     }
 
-    public ResultPaginationDTO fetchResumeByUser(Pageable pageable){
-
+    public ResultPaginationDTO fetchResumeByUser(Pageable pageable) {
         String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                        ? SecurityUtil.getCurrentUserLogin().get() : "";
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
 
         FilterNode node = filterParser.parse("email='" + email + "'");
         FilterSpecification<Resume> spec = filterSpecificationConverter.convert(node);
@@ -147,14 +148,18 @@ public class ResumeService {
 
         mt.setPage(pageable.getPageNumber() + 1);
         mt.setPageSize(pageable.getPageSize());
-
         mt.setPages(pageResume.getTotalPages());
         mt.setTotal(pageResume.getTotalElements());
 
         rs.setMeta(mt);
 
-        
-            return rs;
+        // ✅ Thay đổi chỗ này - convert sang DTO giống hàm fetchAllResume
+        List<ResFetchResumeDTO> listResume = pageResume.getContent()
+                .stream().map(item -> this.getResumeById(item))
+                .collect(Collectors.toList());
 
+        rs.setResult(listResume);
+
+        return rs;
     }
 }
