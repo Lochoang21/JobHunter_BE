@@ -1,5 +1,5 @@
 # Build stage
-FROM gradle:8.7-jdk17-slim AS build
+FROM gradle:8.7-jdk17 AS build
 WORKDIR /app
 # Copy source code
 COPY --chown=gradle:gradle . .
