@@ -1,23 +1,18 @@
-# Build stage
-FROM gradle:8.7-jdk17 AS build
-WORKDIR /app
-# Copy only necessary files for dependency resolution
-COPY build.gradle settings.gradle gradlew /app/
-COPY gradle /app/gradle
-# Download dependencies
-RUN gradle build --no-daemon --info -x test
-# Copy source code and build the application
-COPY src /app/src
-RUN gradle bootJar --no-daemon --info -x test
 
-# Run stage
-FROM eclipse-temurin:17-jre-alpine
-WORKDIR /app
-# Copy the built JAR from the build stage
-COPY --from=build /app/build/libs/*.jar /app/app.jar
-# Expose the port (Render expects this to match your app's port)
+FROM gradle:8.7-jdk17 AS build
+COPY --chown=gradle:gradle . /app/jobhunter
+# Đặt thư mục làm việc trong container là /app
+WORKDIR /app/jobhunter
+
+# Chạy lệnh Gradle để build ứng dụng và bỏ qua các bài test
+RUN gradle clean build -x test --no-daemon
+
+# State 2: Runtime the application
+FROM openjdk:17-slim
+# Mở cổng 8080 (nếu ứng dụng của bạn sử dụng cổng này, điều này không bắt buộc)
 EXPOSE 8080
-# Set environment variables for Render (optional, adjust as needed)
-ENV JAVA_OPTS="-Xms512m -Xmx512m"
-# Run the application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+COPY --from=build /app/jobhunter/build/libs/*.jar /app/app.jar
+
+# Định nghĩa lệnh để chạy ứng dụng
+ENTRYPOINT ["java", "-jar", "app.jar"]
