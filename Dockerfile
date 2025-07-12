@@ -1,18 +1,20 @@
-
+# Build stage
 FROM gradle:8.7-jdk17 AS build
-COPY --chown=gradle:gradle . /app/jobhunter
-# Đặt thư mục làm việc trong container là /app
-WORKDIR /app/jobhunter
+WORKDIR /app
+COPY . .
 
-# Chạy lệnh Gradle để build ứng dụng và bỏ qua các bài test
+# Build the application
 RUN gradle clean build -x test --no-daemon
 
-# State 2: Runtime the application
+# Runtime stage
 FROM openjdk:17-slim
-# Mở cổng 8080 (nếu ứng dụng của bạn sử dụng cổng này, điều này không bắt buộc)
+WORKDIR /app
+
+# Copy the built JAR file
+COPY --from=build /app/build/libs/*.jar app.jar
+
+# Expose port
 EXPOSE 8080
 
-COPY --from=build /app/jobhunter/build/libs/*.jar /app/app.jar
-
-# Định nghĩa lệnh để chạy ứng dụng
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
