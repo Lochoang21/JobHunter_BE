@@ -1,9 +1,6 @@
 package vn.hoidanit.jobhunter.service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import org.glassfish.jaxb.core.api.impl.NameConverter.Standard;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,10 +10,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import vn.hoidanit.jobhunter.domain.Job;
 import vn.hoidanit.jobhunter.repository.JobRepository;
 
 @Service

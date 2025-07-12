@@ -4,7 +4,6 @@ import java.time.Instant;
 
 import lombok.Getter;
 import lombok.Setter;
-import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO.CompanyUser;
 import vn.hoidanit.jobhunter.util.constant.GenderEnum;
 
 @Getter

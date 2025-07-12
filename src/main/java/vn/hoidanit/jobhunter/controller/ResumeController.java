@@ -18,18 +18,13 @@ import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
 import com.turkraft.springfilter.builder.FilterBuilder;
-import com.turkraft.springfilter.converter.FilterSpecification;
 import com.turkraft.springfilter.converter.FilterSpecificationConverter;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.rsocket.RSocketProperties.Server.Spec;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;

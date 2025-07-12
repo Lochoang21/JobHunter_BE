@@ -1,10 +1,8 @@
 package vn.hoidanit.jobhunter.controller;
 
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,14 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.domain.request.RequestLoginDTO;
-import vn.hoidanit.jobhunter.domain.request.RequestRegisterDTO;
 import vn.hoidanit.jobhunter.domain.response.ResCreateUserDTO;
 import vn.hoidanit.jobhunter.domain.response.RestLoginDTO;
-import vn.hoidanit.jobhunter.domain.response.RestLoginDTO.UserLogin;
 import vn.hoidanit.jobhunter.service.UserService;
 import vn.hoidanit.jobhunter.util.SecurityUtil;
 import vn.hoidanit.jobhunter.util.annotation.ApiMessage;
-import vn.hoidanit.jobhunter.util.constant.GenderEnum;
 import vn.hoidanit.jobhunter.util.error.IdInvalidException;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/v1")

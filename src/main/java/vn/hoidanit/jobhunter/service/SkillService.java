@@ -1,8 +1,6 @@
 package vn.hoidanit.jobhunter.service;
 
 import java.util.Optional;
-
-import org.hibernate.internal.util.collections.ConcurrentReferenceHashMap.Option;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
