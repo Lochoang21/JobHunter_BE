@@ -123,6 +123,5 @@ Vui lòng đảm bảo mã nguồn tuân thủ các quy tắc định dạng (Ch
 
 - **Tác giả**: Lochoang21
 - **GitHub**: [Lochoang21](https://github.com/Lochoang21)
-- **Email**: [Thêm email của bạn nếu muốn]
 - **Issues**: Nếu gặp lỗi hoặc có đề xuất, vui lòng mở issue tại [GitHub Issues](https://github.com/Lochoang21/JobHunter_BE/issues).
 
