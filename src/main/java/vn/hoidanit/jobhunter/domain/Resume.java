@@ -36,8 +36,8 @@ public class Resume {
     @Enumerated(EnumType.STRING)
     private ResumeStatusEnum status;
 
-    private Instant createAt;
-    private Instant updateAt;
+    private Instant createdAt;
+    private Instant updatedAt;
     private String createBy;
     private String updateBy;
 
@@ -54,7 +54,7 @@ public class Resume {
         this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.createAt = Instant.now();
+        this.createdAt = Instant.now();
 
     }
 
@@ -63,7 +63,7 @@ public class Resume {
         this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.updateAt = Instant.now();
+        this.updatedAt = Instant.now();
 
     }
 

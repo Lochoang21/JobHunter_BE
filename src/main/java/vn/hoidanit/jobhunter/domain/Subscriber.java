@@ -33,8 +33,8 @@ public class Subscriber {
 
     private String email;
 
-    private Instant createAt;
-    private Instant updateAt;
+    private Instant createdAt;
+    private Instant updatedAt;
     private String createBy;
     private String updateBy;
 
@@ -48,7 +48,7 @@ public class Subscriber {
         this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.createAt = Instant.now();
+        this.createdAt = Instant.now();
 
     }
 
@@ -57,7 +57,7 @@ public class Subscriber {
         this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.updateAt = Instant.now();
+        this.updatedAt = Instant.now();
 
     }
 

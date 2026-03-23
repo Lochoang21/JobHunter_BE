@@ -38,8 +38,8 @@ public class Role {
 
     private boolean active;
 
-    private Instant createAt;
-    private Instant updateAt;
+    private Instant createdAt;
+    private Instant updatedAt;
     private String createBy;
     private String updateBy;
 
@@ -57,7 +57,7 @@ public class Role {
         this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.createAt = Instant.now();
+        this.createdAt = Instant.now();
 
     }
 
@@ -66,7 +66,7 @@ public class Role {
         this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.updateAt = Instant.now();
+        this.updatedAt = Instant.now();
 
     }
 }

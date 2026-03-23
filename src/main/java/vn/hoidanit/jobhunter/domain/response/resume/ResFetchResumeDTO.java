@@ -21,8 +21,8 @@ public class ResFetchResumeDTO {
 
     private String companyName;
 
-    private Instant createAt;
-    private Instant updateAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     private String createBy;
     private String updateBy;

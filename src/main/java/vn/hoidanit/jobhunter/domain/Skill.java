@@ -32,8 +32,8 @@ public class Skill {
     @NotBlank(message = "Tên không được để trống")
     private String name;
 
-    private Instant createAt;
-    private Instant updateAt;
+    private Instant createdAt;
+    private Instant updatedAt;
     private String createBy;
     private String updateBy;
 
@@ -50,7 +50,7 @@ public class Skill {
         this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.createAt = Instant.now();
+        this.createdAt = Instant.now();
 
     }
 
@@ -59,7 +59,7 @@ public class Skill {
         this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.updateAt = Instant.now();
+        this.updatedAt = Instant.now();
 
     }
 }

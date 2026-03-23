@@ -113,7 +113,7 @@ public class UserService {
         res.setEmail(user.getEmail());
         res.setName(user.getName());
         res.setAge(user.getAge());
-        res.setCreateAt(user.getCreateAt());
+        res.setCreatedAt(user.getCreatedAt());
         res.setGender(user.getGender());
         res.setAddress(user.getAddress());
 
@@ -147,8 +147,8 @@ public class UserService {
         res.setEmail(user.getEmail());
         res.setName(user.getName());
         res.setAge(user.getAge());
-        res.setCreateAt(user.getCreateAt());
-        res.setUpdateAt(user.getUpdateAt());
+        res.setCreatedAt(user.getCreatedAt());
+        res.setUpdatedAt(user.getUpdatedAt());
         res.setGender(user.getGender());
         res.setAddress(user.getAddress());
         return res;
@@ -166,7 +166,7 @@ public class UserService {
         res.setId(user.getId());
         res.setName(user.getName());
         res.setAge(user.getAge());
-        res.setUpdateAt(user.getUpdateAt());
+        res.setUpdatedAt(user.getUpdatedAt());
         res.setGender(user.getGender());
         res.setAddress(user.getAddress());
         return res;

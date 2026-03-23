@@ -50,8 +50,8 @@ public class Job {
     private Instant staterDate;
     private boolean active;
     private Instant endDate;
-    private Instant updateAt;
-    private Instant createAt;
+    private Instant updatedAt;
+    private Instant createdAt;
     private String createBy;
     private String updateBy;
 
@@ -73,7 +73,7 @@ public class Job {
         this.createBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.createAt = Instant.now();
+        this.createdAt = Instant.now();
 
     }
 
@@ -82,7 +82,7 @@ public class Job {
         this.updateBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        this.updateAt = Instant.now();
+        this.updatedAt = Instant.now();
 
     }
 

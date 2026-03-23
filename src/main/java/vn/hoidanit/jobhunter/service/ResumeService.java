@@ -69,7 +69,7 @@ public class ResumeService {
         ResCeateResumeDTO resCeateResumeDTO = new ResCeateResumeDTO();
         resCeateResumeDTO.setId(resume.getId());
         resCeateResumeDTO.setCreateBy(resume.getCreateBy());
-        resCeateResumeDTO.setCreateAt(resume.getCreateAt());
+        resCeateResumeDTO.setCreatedAt(resume.getCreatedAt());
         return resCeateResumeDTO;
     }
 
@@ -77,7 +77,7 @@ public class ResumeService {
         resume = this.resumeRepository.save(resume);
         ResUpdateResumeDTO resUpdateResumeDTO = new ResUpdateResumeDTO();
         resUpdateResumeDTO.setUpdateBy(resume.getUpdateBy());
-        resUpdateResumeDTO.setUpdateAt(resume.getUpdateAt());
+        resUpdateResumeDTO.setUpdatedAt(resume.getUpdatedAt());
         return resUpdateResumeDTO;
     }
 
@@ -89,9 +89,9 @@ public class ResumeService {
         resFetchResumeDTO.setUrl(resume.getUrl());
         resFetchResumeDTO.setStatus(resume.getStatus());
         resFetchResumeDTO.setCreateBy(resume.getCreateBy());
-        resFetchResumeDTO.setCreateAt(resume.getCreateAt());
+        resFetchResumeDTO.setCreatedAt(resume.getCreatedAt());
         resFetchResumeDTO.setUpdateBy(resume.getUpdateBy());
-        resFetchResumeDTO.setUpdateAt(resume.getUpdateAt());
+        resFetchResumeDTO.setUpdatedAt(resume.getUpdatedAt());
 
         if (resume.getJob() != null) {
             resFetchResumeDTO.setCompanyName(resume.getJob().getCompany().getName());

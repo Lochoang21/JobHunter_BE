@@ -34,8 +34,8 @@ public class RestLoginDTO {
         private String address;
         private Company company;
         private Role role;
-        private Instant createAt;
-        private Instant updateAt;
+        private Instant createdAt;
+        private Instant updatedAt;
     }
 
     @Getter

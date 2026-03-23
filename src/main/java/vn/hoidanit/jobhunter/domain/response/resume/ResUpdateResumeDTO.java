@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 public class ResUpdateResumeDTO {
     private String updateBy;
-    private Instant updateAt;
+    private Instant updatedAt;
 }

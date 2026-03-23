@@ -108,8 +108,8 @@ public ResponseEntity<RestLoginDTO.UserGetAccount> getAccount() {
         userLogin.setAddress(currentUserDB.getAddress());
         userLogin.setCompany(currentUserDB.getCompany());
         userLogin.setRole(currentUserDB.getRole());
-        userLogin.setCreateAt(currentUserDB.getCreateAt());
-        userLogin.setUpdateAt(currentUserDB.getUpdateAt());
+        userLogin.setCreatedAt(currentUserDB.getCreatedAt());
+        userLogin.setUpdatedAt(currentUserDB.getUpdatedAt());
         userGetAccount.setUser(userLogin);
     }
     return ResponseEntity.ok().body(userGetAccount);

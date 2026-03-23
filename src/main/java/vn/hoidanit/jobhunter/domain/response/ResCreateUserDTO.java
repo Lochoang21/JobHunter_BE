@@ -15,7 +15,7 @@ public class ResCreateUserDTO {
     private int age;
     private GenderEnum gender;
     private String address;
-    private Instant createAt;
+    private Instant createdAt;
     private CompanyUser company;
 
     @Getter
